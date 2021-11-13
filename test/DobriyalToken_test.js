@@ -1,11 +1,11 @@
 const { assert } = require("chai");
 const BigNumber = web3.BigNumber;
 
-const DobriyalToken = artifacts.require("DobriyalToken");
-
 require("chai")
     .use(require("chai-bignumber")(BigNumber))
     .should();
+
+const DobriyalToken = artifacts.require("DobriyalToken");
 
 contract("DobriyalToken", accounts => {
 
@@ -30,9 +30,9 @@ contract("DobriyalToken", accounts => {
             //assert.equal(symbol, _symbol);
         })
 
-        it("has the correct decimals", async function () {
+        /*it("has the correct decimals", async function () {
             const decimals = await this.token.decimals();
             decimals.should.be.bignumber.equal(_decimals);
-        })
+        })*/
     })
 })
