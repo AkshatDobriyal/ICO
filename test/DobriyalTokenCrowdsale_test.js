@@ -13,8 +13,14 @@ require("chai")
 
 const DobriyalToken = artifacts.require("DobriyalToken");
 const DobriyalTokenCrowdsale = artifacts.require("DobriyalTokenCrowdsale");
+const RefundVault = artifacts.require("./RefundVault");
 
 contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
+
+    before(async function() {
+        // transfer extra ether to investor1's account for testing
+        await web3.eth.sendTransaction({ from: _, to: investor1, value: ether(25) })
+    })
 
     beforeEach(async function () {
         // token config
@@ -35,8 +41,16 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
         this.cap = ether(100);
         this.openingTime = latestTime() + duration.weeks(1);
         this.closingTime = this.openingTime + duration.weeks(1);
+        this.goal = ether(50);
+
         // investor cap
         this.investorMinCap = 110000000000000000;
+
+        // ICO stages
+        this.preIcoStage = 0;
+        this.preIcoRate = 500;
+        this.icoStage = 1;
+        this.icoRate = 250;
 
         // deploy crowdsale
         this.crowdsale = await DobriyalTokenCrowdsale.new(
@@ -48,6 +62,8 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
             this.closingTime,
             this.goal
         );
+
+        await this.token.pause();
 
         // transfer token ownerable to crowdsale
         await this.token.transferOwnership(this.crowdsale.address);
@@ -118,6 +134,30 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
         })
     })
 
+    describe("crowdsale stages", function () {
+        it("it starts in preICO", async function () {
+            const stage = await this.crowdsale.stage();
+            stage.should.be.bignumber.equal(this.preIcoStage);
+        })
+
+        it("starts at the opening (deployed) rate", async function () {
+            const rate = await this.crowdsale.rate();
+            rate.should.be.bignumber.equal(this.rate);
+        })
+
+        it("allows admin to update the stage & rate", async function() {
+            await this.crowdsale.setCrowdsaleStage(this.icoStage, { from: _});
+            const stage = await this.crowdsale.stage();
+            stage.should.be.bignumber.equal(this.icoStage);
+            const rate = await this.crowdsale.rate();
+            rate.should.be.bignumber.equal(this.icoRate);
+        })
+
+        it("prevents non-admin from updating the stage", async function() {
+            await this.crowdsale.setCrowdsaleStage(this.icoStage, { from: investor1 }).should.be.rejectedWith(EVMRevert);
+        })
+    })
+
     describe("accepting payments", function() {
         it("should accept payments", async function() {
             const value = ether(1);
@@ -145,6 +185,55 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
             const value2 = 1; //wei
             await this.crowdsale.buyTokens(investor1, { value: value1, from: investor1 }).should.be .fulfilled;
         })
+    })
+
+    describe("finalizing the crowdsale", function () {
+        describe("when the goal is not reached", function () {
+            beforeEach(async function () {
+                // do not meet the goal
+                await this.crowdsale.buyTokens(investor2, { value: ether(1), from: investor2 });
+                // fastforwarding past end time
+                await increaseTimeTo(this.closingTime + 1);
+                // finalize the crowdsale
+                await this.crowdsale.finalize({from: _});
+            })
+            it("allows the investor to claim refund", async function () {
+                await this.vault.refund(investor2, {from: investor2}).should.be.fulfiled;
+            })
+        })
+
+        describe("when the goal is reached", function () {
+            beforeEach(async function () {
+                // track current wallet balance
+                this.walletBalance = await web3.eth.getBalance(wallet);
+
+                // meet the goal
+                await this.crowdsale.buyTokens(investor1, { value: ether(26), from: investor1 });
+                await this.crowdsale.buyTokens(investor2, { value: ether(26), from: investor2 });
+                // fastforward past end time
+                await increaseTimeTo(this.closingTime + 1);
+                // finalize the crowdsale
+                await this.crowdsale.finalize({ from: _});
+            })
+
+            it("handles goal reached", async function () {
+                // tracks goal reached
+                const goalReached = await this.crowdsale.goalReached();
+                goalReached.should.be.true;
+
+                // finishes minting token
+                const mintingFinished = await this.token.mintingFinished();
+                mintingFinished.should.be.true;
+
+                // unpauses the token
+                const paused = await this.tokenpaused();
+                paused.should.be.false;
+
+                // pevents investor from claiming refund
+                await this.vault.refund(investor1, { from: investor1 }).should.be.rejectedWith(EVMRevert);
+            })
+        })
+
     })
 
 })
