@@ -4,8 +4,9 @@ pragma solidity >=0.4.22 <=0.8.10;
 import "@openzeppelin/contracts/crowdsale/Crowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/emission/MintedCrowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/validation/CappedCrowdsale.sol";
+import "@openzeppelin/contracts/crowdsale/validation/TimedCrowdsale.sol";
 
-contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale {
+contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, TimedCrowdsale {
 
     // minimum investor contribution = 0.11 Ether
     uint256 public investorMinCap = 110000000000000000;
@@ -15,10 +16,13 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale {
         uint256 rate,
         address payable wallet,
         IERC20 token,
-        uint256 _cap //2712.37 Ether
+        uint256 _cap, //2712.37 Ether
+        uint256 _openingTime,
+        uint256 _closingTime
     )
         Crowdsale(rate, wallet, token)
         CappedCrowdsale(_cap)
+        TimedCrowdsale(_openingTime, _closingTime)
         public
     {
         
@@ -30,11 +34,11 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale {
     * @param _weiAmount Amount of wei contributed
     */
 
-    function getUserContribution(address _beneficiary) public vie returns (uint256){
+    function getUserContribution(address _beneficiary) public view returns (uint256){
         return contributions[_beneficiary];
     }
 
-    function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal{
+    function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal view {
 
         super._preValidatePurchase(_beneficiary, _weiAmount);
         uint256 _existingContribution = contributions[_beneficiary];

@@ -1,5 +1,7 @@
 //const{ ether } = require("./helpers/ether");
-// import EVMRevert from "./helpers/EVMRevert";
+import EVMRevert from "./helpers/EVMRevert";
+import {increaseTimeTo, duration} from "./helpers/increaseTime";
+import latestTime from "./helpers/latestTime";
 //import "@openzeppelin/contracts/ownership/Ownable.sol";
 const { assert } = require("chai");
 const BigNumber = web3.BigNumber;
@@ -31,17 +33,26 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
         this.rate = 500;
         this.wallet = wallet;
         this.cap = ether(100);
+        this.openingTime = latestTime() + duration.weeks(1);
+        this.closingTime = this.openingTime + duration.weeks(1);
+        // investor cap
         this.investorMinCap = 110000000000000000;
 
         // deploy crowdsale
         this.crowdsale = await DobriyalTokenCrowdsale.new(
             this.rate,
             this.wallet,
-            this.token.address
+            this.token.address,
+            this.cap,
+            this.openingTime,
+            this.closingTime
         );
 
         // transfer token ownerable to crowdsale
         await this.token.transferOwnership(this.crowdsale.address);
+
+        // advance time to crowdsale start
+        await increaseTimeTo(this.openingTime + 1);
     })
 
     describe("crowdsale", function () {
@@ -74,6 +85,13 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
         it("has the correct hard cap", async function () {
             const cap = await this.crowdsale.cap();
             cap.hould.be.bignumber.equal(this.cap);
+        })
+    })
+
+    describe("timed crowdsale", function() {
+        it("is open", async function() {
+            const isClosed = await this.crowdale .hasClosed();
+            isClosed.should.be.false;
         })
     })
 
