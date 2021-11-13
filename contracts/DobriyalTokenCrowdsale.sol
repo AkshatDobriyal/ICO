@@ -25,6 +25,14 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
     // Default to presale stage
     CrowdsaleStage public stage = CrowdsaleStage.PreICO;
 
+    // token distribution
+    uint256 reserveWalletPercentage = 30;
+    uint256 interestPayoutWalletPercentage = 20;
+    uint256 teamMembersHRWalletPercentage = 10;
+    uint256 companyGeneralFundWalletPercentage = 13;
+    uint256 airdropsWalletPercentage = 2;
+    uint256 tokenSaleWalletPercentage = 25;
+
     constructor(
         uint256 _rate,
         address payable _wallet,
@@ -59,7 +67,7 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
 
     function _forwardFunds() internal {
         if(stage == CrowdsaleStage.PreICO){
-            _wallet.transfer(msg.value);
+            wallet.transfer(msg.value);
         } else if(stage == CrowdsaleStage.ICO) {
             super._forwardFunds();
         }
@@ -71,8 +79,9 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
             ERC20Mintable _mintableToken = ERC20Mintable(token);
             _mintableToken.finishMinting();
             // unpause the token
-            ERC20Pausable(token).unpause();
-
+            ERC20Pausable _pausableToken = ERC20Pausable(token);
+            _pausableToken.unpause();
+            _pausableToken.transferOwnership(wallet);
         }
         super.finalization();
     }
