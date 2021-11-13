@@ -45,11 +45,15 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
             this.token.address,
             this.cap,
             this.openingTime,
-            this.closingTime
+            this.closingTime,
+            this.goal
         );
 
         // transfer token ownerable to crowdsale
         await this.token.transferOwnership(this.crowdsale.address);
+
+        // add investors to whitelist
+        await this.token.crowdsale.addManyToWhiteList([investor1, investor2]);
 
         // advance time to crowdsale start
         await increaseTimeTo(this.openingTime + 1);
@@ -92,6 +96,25 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
         it("is open", async function() {
             const isClosed = await this.crowdale .hasClosed();
             isClosed.should.be.false;
+        })
+    })
+
+    describe("whitelisted crowdsale", function () {
+        it("rejects contributions from non-whitelisted investors", async function () {
+            const notWhitelisted = _;
+            await this.crowdsale.buyToken(notWhitelisted, { value: ether(1), from: notWhitelisted }).should.be.rejectedWith(EVMRevert);
+        })
+    })
+
+    describe("refundable crowdsale", function () {
+        beforeEach(async function() {
+            await this.crowdsale.buyTokens(investor1, { value: ether(1), from: investor1 })
+        })
+
+        describe("during crowdsale", function () {
+            it("prevents the investor from claiming refund", async function() {
+                await this.vault.refund(invetor1, { from: investor1 }).should.be.rejectedWith(EVMRevert);
+            })
         })
     })
 
