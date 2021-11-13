@@ -68,7 +68,14 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
             this.cap,
             this.openingTime,
             this.closingTime,
-            this.goal
+            this.goal,
+            this.reserveWallet,
+            this.interestPayoutWallet,
+            this.teamMembersHRWallet,
+            this.companyGeneralFundWallet,
+            this.airdropsWallet,
+            this.tokenSaleWallet,
+            this.releaseTime
         );
 
         await this.token.pause();
