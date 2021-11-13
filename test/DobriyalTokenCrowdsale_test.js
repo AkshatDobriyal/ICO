@@ -52,6 +52,14 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
         this.icoStage = 1;
         this.icoRate = 250;
 
+        // token distribution
+        this.reserveWalletPercentage = 30;
+        this.interestPayoutWalletPercentage = 20;
+        this.teamMembersHRWalletPercentage = 10;
+        this.companyGeneralFundWalletPercentage = 13;
+        this.airdropsWalletPercentage = 2;
+        this.tokenSaleWalletPercentage = 25;
+
         // deploy crowdsale
         this.crowdsale = await DobriyalTokenCrowdsale.new(
             this.rate,
@@ -226,11 +234,53 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
                 mintingFinished.should.be.true;
 
                 // unpauses the token
-                const paused = await this.tokenpaused();
+                const paused = await this.token.paused();
                 paused.should.be.false;
+
+                const owner = await this.token.owner();
+                paused.should.equal(this.wallet);
 
                 // pevents investor from claiming refund
                 await this.vault.refund(investor1, { from: investor1 }).should.be.rejectedWith(EVMRevert);
+            })
+        })
+
+        describe("token distribution", function() {
+            it("tracks token distribution correctly", async function() {
+                const reserveWalletPercentage = await this.crowdsale.reserveWalletPercentage();
+                reserveWalletPercentage.should.be.bignumber.eq(this.reserveWalletPercentage, "has correct reserveWalletPercentage");
+
+                const interestPayoutWalletPercentage = await this.crowdsale.interestPayoutWalletPercentage();
+                interestPayoutWalletPercentage.should.be.bignumber.eq(this.interestPayoutWalletPercentage, "has correct interestPayoutWalletPercentage");
+
+                const teamMembersHRWalletPercentage = await this.crowdsale.teamMembersHRWalletPercentage();
+                teamMembersHRWalletPercentage.should.be.bignumber.eq(this.teamMembersHRWalletPercentage, "has correct teamMembersHRPercentage");
+
+                const companyGeneralFundWalletPercentage = await this.crowdsale.companyGeneralFundWalletPercentage();
+                companyGeneralFundWalletPercentage.should.be.bignumber.eq(this.companyGeneralFundWalletPercentage, "has correct companyGeneralFundWalletPercentage");
+
+                const airdropsWalletPercentage = await this.crowdsale.airdropsWalletPercentage();
+                airdropsWalletPercentage.should.be.bignumber.eq(this.airdropsWalletPercentage, "has correct airdropsWalletPercentage");
+
+                const tokenSaleWalletPercentage = await this.crowdsale.tokenSaleWalletPercentage();
+                tokenSaleWalletPercentage.should.be.bignumber.eq(this.tokenSaleWalletPercentage, "has correct tokenSaleWalletPercentage");
+            })
+
+            it("is a valid percentage breakdown", async function () {
+                const reserveWalletPercentage = await this.crowdsale.reserveWalletPercentage();
+
+                const interestPayoutWalletPercentage = await this.crowdsale.interestPayoutWalletPercentage();
+
+                const teamMembersHRWalletPercentage = await this.crowdsale.teamMembersHRWalletPercentage();
+
+                const companyGeneralFundWalletPercentage = await this.crowdsale.companyGeneralFundWalletPercentage();
+
+                const airdropsWalletPercentage = await this.crowdsale.airdropsWalletPercentage();
+
+                const tokenSaleWalletPercentage = await this.crowdsale.tokenSaleWalletPercentage();
+
+                const total = reserveWalletPercentage.toNumber() + interestPayoutWalletPercentage.toNumber() + teamMembersHRWalletPercentage.toNumber() + companyGeneralFundWalletPercentage.toNumber() + airdropsWalletPercentage.toNumber() + tokenSaleWalletPercentage.toNumber();
+                total.should.equal(100);
             })
         })
 
