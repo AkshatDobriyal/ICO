@@ -7,6 +7,6 @@ module.exports = function (deployer) {
     const _decimals = 18;
 
     deployer.deploy(DobriyalToken, _name, _symbol, _decimals).then(function() {
-        return deployer.deploy(DobriyalTokenCrowdsale, 500, DobriyalToken.address, DobriyalToken.address)
+        return deployer.deploy(DobriyalTokenCrowdsale, 500, DobriyalToken.address, DobriyalToken.address, 100)
     });
 };
