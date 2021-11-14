@@ -1,10 +1,12 @@
 # Dobriyal Crowdsale
 
-This project demonstrates a crowdsale with specific characteristics and some extensive features, developed using the OpenZeppelin library. It has a smart contract based on the ERC20 standard token, i.e. DobriyalToken and another smart contract, DobriyalTokenCrowdsale, to manage the working of the crowdsale. Tests have been written vigorously for each and every functionality of the crowdsale and token.
+This project demonstrates a crowdsale with specific characteristics and some extensive features, developed using the **OpenZeppelin** library. It has a smart contract based on the ERC20 standard token, i.e. DobriyalToken and another smart contract, DobriyalTokenCrowdsale, to manage the working of the crowdsale. Tests have been written vigorously for each and every functionality of the crowdsale and token.
 
 **Tech-Stack:** Solidity, Truffle, Ganache, OpenZeppelin, Chainlink Price Feeds Oracle
 
-**Chainlink Price Feeds Oracle** has been used to fetch price data into the Solidity smart contract.
+**Chainlink Price Feeds Oracle** 
+
+Chainlink Price Feeds Oracle has been used to fetch price data into the Solidity smart contract.
 
 Chainlink Price Feeds use multiple high-quality data inputs and aggregate them through a decentralized network of Chainlink oracles that feed price data into reference contracts, where the results are again aggregated in an Aggregator Smart Contract as the latest, trusted answer.
 
@@ -85,9 +87,9 @@ CrowdSale : 15% 1st week, 10% 2nd week, 5% 3rd week, 0% 4th week
 
 ## The Dobriyaltoken smart contract follows ERC20 standards and has the features of:
 
-- **MintableToken**
-- **PausableToken**
-- **DetailedERC20**
+- **MintableToken** (tokens that are created without performing any underlying consensus related activity)
+- **PausableToken** (a token that can be paused to prevent any transfers of the token when it is paused)
+- **DetailedERC20** (a scripting standard used within the Ethereum blockchain)
 
 ## Tests
 
