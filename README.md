@@ -2,6 +2,8 @@
 
 This project demonstrates a crowdsale with specific characteristics and some extensive features, developed using the OpenZeppelin library. It has a smart contract based on the ERC20 standard token, i.e. DobriyalToken and another smart contract, DobriyalTokenCrowdsale, to manage the working of the crowdsale. Tests have been written vigorously for each and every functionality of the crowdsale and token.
 
+**Tech-Stack:** Solidity, Truffle, Ganache, OpenZeppelin   
+
 ## Crowdsale Characteristics (Calculations based on the given details)
 
 Total number of tokens : 50,000,000,000
@@ -15,28 +17,32 @@ Total number of tokens : 50,000,000,000
 - Bounties/Airdrops Wallet: 2% (1 billion)
 - Token Sale Wallet: 25% (12.5 billion) 
 
-- **Token Price** : $0.001
- => Token Price = 2.1e-7 ETH
- => Rate = 1 / 2.1e-7
- => **Rate** = 4761904.76
+**Token Price** : $0.001
+=> Token Price = 2.1e-7 ETH
+=> Rate = 1 / 2.1e-7
+=> **Rate** = 4761904.76
 
-- **Private sale Duration** :  15 days
-- **PreSale Duration** : 15 Days
-- **CrowdSale Duration** : 30 Days
+**Private sale Duration** :  15 days
 
-- **SoftCap** : $5,000,000
- => Goal = $5,000,000 = 1067.98 ETH
+**PreSale Duration** : 15 Days
 
-- **HardCap** = USD 12.5 million = 2669.14 ETH
+**CrowdSale Duration** : 30 Days
 
-- **Minimum cap for each investor** = $500 = 0.11 ETH
+**SoftCap** : $5,000,000
+=> Goal = $5,000,000 = 1067.98 ETH
 
-- **Bonus** : 
-  Private Sale : 25%
-  Pre-Sale : 20%
-  CrowdSale : 15% 1st week, 10% 2nd week, 5% 3rd week, 0% 4th week
+**HardCap** = USD 12.5 million = 2669.14 ETH
 
-###### The DobriyalCrowdsale follows all the standards of the OpenZeppelin crowdsale smart contract and has the characteristics and functionalities of:
+**Minimum cap for each investor** = $500 = 0.11 ETH
+
+**Bonus** : 
+Private Sale : 25%
+
+Pre-Sale : 20%
+
+CrowdSale : 15% 1st week, 10% 2nd week, 5% 3rd week, 0% 4th week
+
+## The DobriyalCrowdsale follows all the standards of the OpenZeppelin crowdsale smart contract and has the characteristics and functionalities of:
 
 - **MintedCrowdsale** (helps to mint tokens during crowdsale)
 - **CappedCrowdsale** (helps to put a hard cap or maximum limit on the crowdsale) 
@@ -45,13 +51,13 @@ Total number of tokens : 50,000,000,000
 - **WhitelistedCrowdsale** (helps to whitelist authorized investors to participate in the crowdsale)
 - **RefundableCrowdsale** (helps to claim refund if the crowdsale goal is not reached)
 
-The Dobriyaltoken smart contract follows ERC20 standards and has the features of:
+## The Dobriyaltoken smart contract follows ERC20 standards and has the features of:
 
 - **MintableToken**
 - **PausableToken**
 - **DetailedERC20**
 
-###### Tests
+## Tests
 
 Extensive tests have been written for each and every functionality of the crowdsale and token.
 
