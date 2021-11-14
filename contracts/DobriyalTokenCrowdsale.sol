@@ -14,6 +14,8 @@ import "@openzeppelin/contracts/crowdsale/validation/WhitelistedCrowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/distribution/RefundableCrowdsale.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/TokenTimelock.sol";
+
+// contract for DobriyalTokenCrowdsale
 contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, TimedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
     // minimum investor contribution = $500 = 0.11 ETH (current soft cap for investor)
@@ -115,10 +117,12 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
         super.finalization();
     }
 
+    // get the contribution of an individual user
     function getUserContribution(address _beneficiary) public view returns (uint256){
         return contributions[_beneficiary];
     }
 
+    // function to pre validate the purchase
     function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal {
 
         super._preValidatePurchase(_beneficiary, _weiAmount);
