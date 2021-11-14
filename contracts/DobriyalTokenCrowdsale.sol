@@ -2,22 +2,23 @@
 pragma solidity >=0.4.22 <=0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20Mintable.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol";
+import "@openzeppelin/contracts/token/ERC20/MintableToken.sol";
+import "@openzeppelin/contracts/token/ERC20/PausableToken.sol";
+import "@openzeppelin/contracts/token/ERC20/DetailedERC20.sol";
 import "@openzeppelin/contracts/crowdsale/Crowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/emission/MintedCrowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/validation/CappedCrowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/validation/IndividuallyCappedCrowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/validation/TimedCrowdsale.sol";
-import "@openzeppelin/contracts/crowdsale/validation/WhitelistCrowdsale.sol";
+import "@openzeppelin/contracts/crowdsale/validation/WhitelistedCrowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/distribution/RefundableCrowdsale.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/TokenTimelock.sol";
-contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, IndividuallyCappedCrowdsale, TimedCrowdsale, WhitelistCrowdsale, RefundableCrowdsale {
+contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, TimedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
-    uint256 _rate;
-    address payable _wallet;
+    //uint256 _rate;
+    //address payable _wallet;
+    //address token;
     // minimum investor contribution = 0.11 Ether
     uint256 public investorMinCap = 110000000000000000;
     mapping(address => uint256) public contributions;
@@ -43,8 +44,8 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
 
     constructor(
         uint256 _rate,
-        address payable _wallet,
-        IERC20 _token,
+        address _wallet,
+        ERC20 _token,
         uint256 _cap, //2712.37 Ether
         uint256 _openingTime,
         uint256 _closingTime,
@@ -78,15 +79,15 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
         }
 
         if(stage == CrowdsaleStage.PreICO) {
-            _rate = 500;
+            rate = 952380;
         } else if(stage == CrowdsaleStage.ICO) {
-            _rate = 250;
+            rate = 714285;
         }
     }
 
     function _forwardFunds() internal {
         if(stage == CrowdsaleStage.PreICO){
-            _wallet.transfer(msg.value);
+            wallet.transfer(msg.value);
         } else if(stage == CrowdsaleStage.ICO) {
             super._forwardFunds();
         }
@@ -95,7 +96,7 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
     function finalization() internal {
         if(goalReached()){
             // Finish minting the token
-            ERC20Mintable _mintableToken = ERC20Mintable(token);
+            MintableToken _mintableToken = MintableToken(token);
             uint256 _alreadyMinted = _mintableToken.totalSupply();
 
             uint256 _finalTotalSupply = _alreadyMinted.div(reserveWalletPercentage).mul(100);
@@ -103,19 +104,20 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
             _mintableToken.mint(interestPayoutWallet, _finalTotalSupply.div(interestPayoutWalletPercentage));
             _mintableToken.mint(teamMembersHRWallet, _finalTotalSupply.div(teamMembersHRWalletPercentage));
             _mintableToken.mint(companyGeneralFundWallet, _finalTotalSupply.div(companyGeneralFundWalletPercentage));
-            _mintableToken.mint(airdropsWallet, _finalTotalSupply.div(airdropsWallet));
-            _mintableToken.mint(tokenSaleWallet, _finalTotalSupply.div(tokenSaleWallet));
-
+            _mintableToken.mint(airdropsWallet, _finalTotalSupply.div(airdropsWalletPercentage));
+            _mintableToken.mint(tokenSaleWallet, _finalTotalSupply.div(tokenSaleWalletPercentage));
+            
             _mintableToken.finishMinting();
+            
             // unpause the token
-            ERC20Pausable _pausableToken = ERC20Pausable(token);
+            PausableToken _pausableToken = PausableToken(token);
             _pausableToken.unpause();
             _pausableToken.transferOwnership(wallet);
         }
         super.finalization();
     }
 
-    /*function getUserContribution(address _beneficiary) public view returns (uint256){
+    function getUserContribution(address _beneficiary) public view returns (uint256){
         return contributions[_beneficiary];
     }
 
@@ -126,5 +128,5 @@ contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, 
         uint256 _newContribution = _existingContribution.add(_weiAmount);
         require(_newContribution >= investorMinCap);
         contributions[_beneficiary] = _newContribution;
-    }*/
+    }
 }
