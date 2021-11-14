@@ -4,7 +4,7 @@ This project demonstrates a crowdsale with specific characteristics and some ext
 
 **Tech-Stack:** Solidity, Truffle, Ganache, OpenZeppelin, Chainlink Price Feeds Oracle
 
-**Chainlink Price Feeds Oracle** 
+**Chainlink Price Feeds Oracle:** 
 
 Chainlink Price Feeds Oracle has been used to fetch price data into the Solidity smart contract.
 
@@ -27,11 +27,11 @@ Total number of tokens : 50,000,000,000
 
 **Token Price** : $0.001
 
-(Generalized Rate)
+**(Generalized Rate)**
 => Token Price = 0.001/price ETH
 => **Rate** = price/0.001
 
-(Current Rate)
+**(Current Rate)**
 => Token Price = 2.1e-7 ETH
 => Rate = 1 / 2.1e-7
 => **Rate** = 4761904.76
@@ -44,28 +44,28 @@ Total number of tokens : 50,000,000,000
 
 **SoftCap** : $5,000,000
 
-(Generalized soft cap)
+**(Generalized soft cap)**
 => **Goal** = $5,000,000 = 5,000,000/price ETH
 
-(Current soft cap)
+**(Current soft cap)**
 => **Goal** = $5,000,000 = 1067.98 ETH
 
 **HardCap** : 
 
-(Generalized hard cap)
+**(Generalized hard cap)**
 **HardCap** =  USD 12.5 million = 12500000/price ETH
 
-(Current hard cap)
+**(Current hard cap)**
 **HardCap** = USD 12.5 million = 2669.14 ETH
 
               
 
 **Minimum cap for each investor** : 
 
-(Generalized soft cap for each investor)
+**(Generalized soft cap for each investor)**
 **Minimum cap for each investor** = $500 = 500/price ETH
 
-(Current soft cap for each investor)
+**(Current soft cap for each investor)**
 **Minimum cap for each investor** = $500 = 0.11 ETH
 
 **Bonus** : 
