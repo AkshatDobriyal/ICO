@@ -2,7 +2,13 @@
 
 This project demonstrates a crowdsale with specific characteristics and some extensive features, developed using the OpenZeppelin library. It has a smart contract based on the ERC20 standard token, i.e. DobriyalToken and another smart contract, DobriyalTokenCrowdsale, to manage the working of the crowdsale. Tests have been written vigorously for each and every functionality of the crowdsale and token.
 
-**Tech-Stack:** Solidity, Truffle, Ganache, OpenZeppelin   
+**Tech-Stack:** Solidity, Truffle, Ganache, OpenZeppelin, Chainlink Price Feeds Oracle
+
+**Chainlink Price Feeds Oracle** has been used to fetch price data into the Solidity smart contract.
+
+Chainlink Price Feeds use multiple high-quality data inputs and aggregate them through a decentralized network of Chainlink oracles that feed price data into reference contracts, where the results are again aggregated in an Aggregator Smart Contract as the latest, trusted answer.
+
+The smart contract PriceConsumerV3.sol has the function getLatestPrice() that returns the **price**, the current ETH/USD, i.e. the amount of USD equal to 1 ETH. This price has been used in the crowdsale smart contract to calculate the rate, soft cap and hard cap at any point of time.
 
 ## Crowdsale Characteristics (Calculations based on the given details)
 
@@ -18,6 +24,12 @@ Total number of tokens : 50,000,000,000
 - Token Sale Wallet: 25% (12.5 billion) 
 
 **Token Price** : $0.001
+
+(Generalized Rate)
+=> Token Price = 0.001/price ETH
+=> **Rate** = price/0.001
+
+(Current Rate)
 => Token Price = 2.1e-7 ETH
 => Rate = 1 / 2.1e-7
 => **Rate** = 4761904.76
@@ -29,13 +41,33 @@ Total number of tokens : 50,000,000,000
 **CrowdSale Duration** : 30 Days
 
 **SoftCap** : $5,000,000
-=> Goal = $5,000,000 = 1067.98 ETH
 
+(Generalized soft cap)
+=> **Goal** = $5,000,000 = 5,000,000/price ETH
+
+(Current soft cap)
+=> **Goal** = $5,000,000 = 1067.98 ETH
+
+**HardCap** : 
+
+(Generalized hard cap)
+**HardCap** =  USD 12.5 million = 12500000/price ETH
+
+(Current hard cap)
 **HardCap** = USD 12.5 million = 2669.14 ETH
 
+              
+
+**Minimum cap for each investor** : 
+
+(Generalized soft cap for each investor)
+**Minimum cap for each investor** = $500 = 500/price ETH
+
+(Current soft cap for each investor)
 **Minimum cap for each investor** = $500 = 0.11 ETH
 
 **Bonus** : 
+
 Private Sale : 25%
 
 Pre-Sale : 20%
