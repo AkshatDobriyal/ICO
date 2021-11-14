@@ -1,6 +1,6 @@
 //const{ ether } = require("./helpers/ether");
 import EVMRevert from "./helpers/EVMRevert";
-import {increaseTimeTo, duration} from "./helpers/increaseTime";
+import { increaseTimeTo, duration } from "./helpers/increaseTime";
 import latestTime from "./helpers/latestTime";
 //import "@openzeppelin/contracts/ownership/Ownable.sol";
 const { assert } = require("chai");
@@ -15,9 +15,9 @@ const DobriyalToken = artifacts.require("DobriyalToken");
 const DobriyalTokenCrowdsale = artifacts.require("DobriyalTokenCrowdsale");
 const RefundVault = artifacts.require("./RefundVault");
 
-contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
+contract("DobriyalTokenCrowdsale", function ([_, wallet, investor1, investor2]) {
 
-    before(async function() {
+    before(async function () {
         // transfer extra ether to investor1's account for testing
         await web3.eth.sendTransaction({ from: _, to: investor1, value: ether(25) })
     })
@@ -110,10 +110,10 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
     })
 
     // test token token minting
-    describe("minted crowdsale", function() {
-        it("mints tokens after purchase", async function() {
+    describe("minted crowdsale", function () {
+        it("mints tokens after purchase", async function () {
             const originalTotalSupply = await this.token.totalSupply();
-            await this.crowdsale.sendTransaction({ value: ether(1), from: investor1});
+            await this.crowdsale.sendTransaction({ value: ether(1), from: investor1 });
             const newTotalSupply = await this.token.totalSupply();
             assert.isTrue(newTotalSupply > originalTotalSupply);
         })
@@ -128,9 +128,9 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
     })
 
     // test the timed crowdsale
-    describe("timed crowdsale", function() {
-        it("is open", async function() {
-            const isClosed = await this.crowdale .hasClosed();
+    describe("timed crowdsale", function () {
+        it("is open", async function () {
+            const isClosed = await this.crowdale.hasClosed();
             isClosed.should.be.false;
         })
     })
@@ -145,12 +145,12 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
 
     // test if investors can claim refund
     describe("refundable crowdsale", function () {
-        beforeEach(async function() {
+        beforeEach(async function () {
             await this.crowdsale.buyTokens(investor1, { value: ether(1), from: investor1 })
         })
 
         describe("during crowdsale", function () {
-            it("prevents the investor from claiming refund", async function() {
+            it("prevents the investor from claiming refund", async function () {
                 await this.vault.refund(invetor1, { from: investor1 }).should.be.rejectedWith(EVMRevert);
             })
         })
@@ -169,22 +169,22 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
         })
 
         // test to chcek whether only admin can update stage and rate
-        it("allows admin to update the stage & rate", async function() {
-            await this.crowdsale.setCrowdsaleStage(this.icoStage, { from: _});
+        it("allows admin to update the stage & rate", async function () {
+            await this.crowdsale.setCrowdsaleStage(this.icoStage, { from: _ });
             const stage = await this.crowdsale.stage();
             stage.should.be.bignumber.equal(this.icoStage);
             const rate = await this.crowdsale.rate();
             rate.should.be.bignumber.equal(this.icoRate);
         })
 
-        it("prevents non-admin from updating the stage", async function() {
+        it("prevents non-admin from updating the stage", async function () {
             await this.crowdsale.setCrowdsaleStage(this.icoStage, { from: investor1 }).should.be.rejectedWith(EVMRevert);
         })
     })
 
     // test the payment accepting functionality
-    describe("accepting payments", function() {
-        it("should accept payments", async function() {
+    describe("accepting payments", function () {
+        it("should accept payments", async function () {
             const value = ether(1);
             const purchaser = investor2;
             await this.crowdsale.sendTransactions({ value: value, from: investor1 }).should.be.fulfilled;
@@ -209,7 +209,7 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
             await this.crowdsale.buyTokens(investor1, { value: value1, from: investor1 });
             // second contribution is less than investor cap
             const value2 = 1; //wei
-            await this.crowdsale.buyTokens(investor1, { value: value1, from: investor1 }).should.be .fulfilled;
+            await this.crowdsale.buyTokens(investor1, { value: value1, from: investor1 }).should.be.fulfilled;
         })
     })
 
@@ -222,10 +222,10 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
                 // fastforwarding past end time
                 await increaseTimeTo(this.closingTime + 1);
                 // finalize the crowdsale
-                await this.crowdsale.finalize({from: _});
+                await this.crowdsale.finalize({ from: _ });
             })
             it("allows the investor to claim refund", async function () {
-                await this.vault.refund(investor2, {from: investor2}).should.be.fulfiled;
+                await this.vault.refund(investor2, { from: investor2 }).should.be.fulfiled;
             })
         })
 
@@ -240,7 +240,7 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
                 // fastforward past end time
                 await increaseTimeTo(this.closingTime + 1);
                 // finalize the crowdsale
-                await this.crowdsale.finalize({ from: _});
+                await this.crowdsale.finalize({ from: _ });
             })
 
             it("handles goal reached", async function () {
@@ -265,8 +265,8 @@ contract("DobriyalTokenCrowdsale", function([_, wallet, investor1, investor2]) {
         })
 
         // tests to check if the token distribution is correct
-        describe("token distribution", function() {
-            it("tracks token distribution correctly", async function() {
+        describe("token distribution", function () {
+            it("tracks token distribution correctly", async function () {
                 const reserveWalletPercentage = await this.crowdsale.reserveWalletPercentage();
                 reserveWalletPercentage.should.be.bignumber.eq(this.reserveWalletPercentage, "has correct reserveWalletPercentage");
 
