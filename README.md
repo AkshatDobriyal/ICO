@@ -15,23 +15,23 @@ Total number of tokens : 50,000,000,000
 - Bounties/Airdrops Wallet: 2% (1 billion)
 - Token Sale Wallet: 25% (12.5 billion) 
 
-- Token Price : $0.001
+- **Token Price** : $0.001
  => Token Price = 2.1e-7 ETH
  => Rate = 1 / 2.1e-7
- => Rate = 4761904.76
+ => **Rate** = 4761904.76
 
-- Private sale Duration :  15 days
-- PreSale Duration : 15 Days
-- rowdSale Duration : 30 Days
+- **Private sale Duration** :  15 days
+- **PreSale Duration** : 15 Days
+- **CrowdSale Duration** : 30 Days
 
-- SoftCap : $5,000,000
+- **SoftCap** : $5,000,000
  => Goal = $5,000,000 = 1067.98 ETH
 
-- HardCap = USD 12.5 million = 2669.14 ETH
+- **HardCap** = USD 12.5 million = 2669.14 ETH
 
-- Minimum cap for each investor = $500 = 0.11 ETH
+- **Minimum cap for each investor** = $500 = 0.11 ETH
 
-- Bonus : 
+- **Bonus** : 
   Private Sale : 25%
   Pre-Sale : 20%
   CrowdSale : 15% 1st week, 10% 2nd week, 5% 3rd week, 0% 4th week
@@ -47,9 +47,9 @@ Total number of tokens : 50,000,000,000
 
 The Dobriyaltoken smart contract follows ERC20 standards and has the features of:
 
-- **ERC20Mintable
-- **ERC20Pausable**
-- **ERC20Detailed**
+- **MintableToken**
+- **PausableToken**
+- **DetailedERC20**
 
 ###### Tests
 
