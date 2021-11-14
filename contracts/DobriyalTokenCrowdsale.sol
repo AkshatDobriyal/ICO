@@ -16,11 +16,9 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/TokenTimelock.sol";
 contract DobriyalTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, TimedCrowdsale, WhitelistedCrowdsale, RefundableCrowdsale {
 
-    //uint256 _rate;
-    //address payable _wallet;
-    //address token;
-    // minimum investor contribution = 0.11 Ether
-    uint256 public investorMinCap = 110000000000000000;
+    // minimum investor contribution = $500 = 0.11 ETH (current soft cap for investor)
+    // minimum investor contribution = $500 = 500/price ETH (generalized soft cap for investor)
+    uint256 public investorMinCap = 500/price;
     mapping(address => uint256) public contributions;
 
     // crowdsale stages
