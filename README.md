@@ -58,7 +58,6 @@ Total number of tokens : 50,000,000,000
 **(Current hard cap)**
 **HardCap** = USD 12.5 million = 2669.14 ETH
 
-              
 
 **Minimum cap for each investor** : 
 
