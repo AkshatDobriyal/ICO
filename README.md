@@ -1,6 +1,6 @@
 # Dobriyal Crowdsale
 
-This project demonstrates a crowdsale with specific characteristics and some extensive features, developed using the **OpenZeppelin** library. It has a smart contract based on the ERC20 standard token, i.e. DobriyalToken and another smart contract, DobriyalTokenCrowdsale, to manage the working of the crowdsale. Tests have been written vigorously for each and every functionality of the crowdsale and token.
+This project demonstrates a crowdsale with specific characteristics and some extensive features, developed using the **OpenZeppelin** library. It has a smart contract based on the **ERC20** standard token, i.e. DobriyalToken and another smart contract, DobriyalTokenCrowdsale, to manage the working of the crowdsale. Tests have been written vigorously for each and every functionality of the crowdsale and token.
 
 **Tech-Stack:** Solidity, Truffle, Ganache, OpenZeppelin, Chainlink Price Feeds Oracle
 
